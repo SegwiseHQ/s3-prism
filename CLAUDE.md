@@ -18,7 +18,7 @@ s3-viewer/
 
 ### Frontend (frontend/)
 ```bash
-cd s3-prism
+cd frontend
 npm install        # Install dependencies (uses bun.lockb)
 npm run dev        # Start dev server on port 3000
 npm run build      # Production build

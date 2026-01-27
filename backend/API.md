@@ -312,7 +312,7 @@ All endpoints may return the following error responses:
 
 The API supports CORS for the frontend origin specified in the `.env` file:
 ```
-CORS_ORIGIN=http://localhost:5173
+CORS_ORIGIN=http://localhost:3000
 ```
 
 All endpoints include appropriate CORS headers to allow cross-origin requests from the frontend.
@@ -327,4 +327,6 @@ Currently, there is no rate limiting implemented. Consider adding rate limiting 
 
 ## Authentication
 
-The backend uses AWS credentials from `~/.aws/credentials` or environment variables. No additional authentication is required for API endpoints, but you should implement authentication in production.
+All `/api/s3/*` endpoints require authentication via Google OAuth. Users must sign in through the `/api/auth/google` flow to obtain a session cookie. Unauthenticated requests to protected endpoints will receive a `401 Unauthorized` response.
+
+The backend uses AWS credentials from environment variables or `~/.aws/credentials` for S3 access.
