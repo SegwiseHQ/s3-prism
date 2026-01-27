@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+
+@theme {
+  --color-background: 220 20% 6%;
+  --color-foreground: 210 20% 95%;
+
+  --color-card: 220 18% 10%;
+  --color-card-foreground: 210 20% 95%;
+
+  --color-popover: 220 18% 10%;
+  --color-popover-foreground: 210 20% 95%;
+
+  --color-primary: 174 72% 50%;
+  --color-primary-foreground: 220 20% 6%;
+
+  --color-secondary: 220 15% 15%;
+  --color-secondary-foreground: 210 20% 85%;
+
+  --color-muted: 220 15% 18%;
+  --color-muted-foreground: 215 15% 55%;
+
+  --color-accent: 174 72% 50%;
+  --color-accent-foreground: 220 20% 6%;
+
+  --color-destructive: 0 72% 55%;
+  --color-destructive-foreground: 210 40% 98%;
+
+  --color-border: 220 15% 18%;
+  --color-input: 220 15% 15%;
+  --color-ring: 174 72% 50%;
+
+  --radius: 0.5rem;
+
+  --color-sidebar-background: 220 20% 8%;
+  --color-sidebar-foreground: 210 20% 85%;
+  --color-sidebar-primary: 174 72% 50%;
+  --color-sidebar-primary-foreground: 220 20% 6%;
+  --color-sidebar-accent: 220 15% 15%;
+  --color-sidebar-accent-foreground: 210 20% 95%;
+  --color-sidebar-border: 220 15% 15%;
+  --color-sidebar-ring: 174 72% 50%;
+
+  --color-surface-elevated: 220 18% 12%;
+  --color-surface-hover: 220 15% 14%;
+  --color-border-subtle: 220 15% 14%;
+  --color-text-tertiary: 215 12% 45%;
+  --color-success: 142 72% 45%;
+  --color-warning: 38 92% 50%;
+  --color-info: 210 100% 60%;
+
+  --color-file-image: 280 70% 60%;
+  --color-file-document: 210 90% 60%;
+  --color-file-code: 142 72% 50%;
+  --color-file-archive: 38 90% 55%;
+  --color-file-video: 350 80% 60%;
+  --color-file-audio: 174 72% 50%;
+  --color-file-folder: 210 20% 60%;
+
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--color-border));
+  }
+
+  body {
+    background-color: hsl(var(--color-background));
+    color: hsl(var(--color-foreground));
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    background-color: hsl(var(--color-card) / 0.8);
+    backdrop-filter: blur(24px);
+    border: 1px solid hsl(var(--color-border) / 0.5);
+  }
+
+  .hover-lift {
+    transition: all 0.2s;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px hsl(var(--color-primary) / 0.05);
+  }
+
+  .file-grid-item {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: hsl(var(--color-secondary) / 0.5);
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .file-grid-item:hover {
+    border-color: hsl(var(--color-primary) / 0.3);
+    background-color: hsl(var(--color-secondary));
+  }
+
+  .file-list-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid hsl(var(--color-border) / 0.5);
+    transition: colors 0.15s;
+    cursor: pointer;
+  }
+
+  .file-list-item:hover {
+    background-color: hsl(var(--color-secondary) / 0.5);
+  }
+
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    color: hsl(var(--color-muted-foreground));
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+
+  .sidebar-item:hover {
+    color: hsl(var(--color-foreground));
+    background-color: hsl(var(--color-sidebar-accent));
+  }
+
+  .sidebar-item-active {
+    background-color: hsl(var(--color-sidebar-accent));
+    color: hsl(var(--color-foreground));
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--color-muted)) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--color-muted));
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--color-muted-foreground));
+  }
+}
