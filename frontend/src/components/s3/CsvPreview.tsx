@@ -36,7 +36,22 @@ const detectType = (value: string): 'number' | 'boolean' | 'null' | 'date' | 'st
   if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false') {
     return 'boolean';
   }
-  if (!isNaN(Number(value)) && value !== '') {
+  
+  // Integer check: use BigInt to avoid float precision loss for uint64 values
+  if (/^-?\d+$/.test(value)) {
+    try {
+      const big = BigInt(value);
+      const MAX = BigInt(Number.MAX_SAFE_INTEGER);
+      if (big > MAX || big < -MAX) {
+        return 'string'; // Too large for safe JS number — keep as string
+      }
+    } catch {
+      return 'string';
+    }
+    return 'number';
+  }
+  // Float check (has decimal point)
+  if (!isNaN(Number(value))) {
     return 'number';
   }
   // Simple date detection (YYYY-MM-DD or similar patterns)
