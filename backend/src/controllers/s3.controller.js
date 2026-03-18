@@ -326,6 +326,8 @@ const getObjectContent = async (req, res) => {
             const response = await s3Client.send(command);
 
             // Set appropriate headers
+            const fileName = key.split('/').pop() || 'download';
+            res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
             res.setHeader('Content-Type', contentType);
             res.setHeader('Content-Length', fileSize);
             res.setHeader('Accept-Ranges', 'bytes');
