@@ -262,6 +262,7 @@ const getViewUrl = async (req, res) => {
  */
 const getObjectContent = async (req, res) => {
     const { bucket, key } = req.params;
+    const isDownload = req.query.download === '1' || req.query.download === 'true';
 
     // Check if bucket is allowed
     const allowedBuckets = getAllowedBuckets();
@@ -281,6 +282,12 @@ const getObjectContent = async (req, res) => {
         const metadata = await s3Client.send(headCommand);
         const fileSize = metadata.ContentLength;
         const contentType = metadata.ContentType || 'application/octet-stream';
+
+        // Derive filename from the S3 key (last path segment) for Content-Disposition.
+        // Use RFC 5987 encoding to support non-ASCII filenames safely.
+        const filename = key.split('/').pop() || 'download';
+        const asciiFallback = filename.replace(/[^\x20-\x7E]/g, '_').replace(/"/g, '');
+        const disposition = `${isDownload ? 'attachment' : 'inline'}; filename="${asciiFallback}"; filename*=UTF-8''${encodeURIComponent(filename)}`;
 
         // Parse range header if present (for video seeking)
         const range = req.headers.range;
@@ -307,6 +314,7 @@ const getObjectContent = async (req, res) => {
             res.setHeader('Accept-Ranges', 'bytes');
             res.setHeader('Content-Length', chunkSize);
             res.setHeader('Content-Type', contentType);
+            res.setHeader('Content-Disposition', disposition);
             res.setHeader('Cache-Control', 'public, max-age=3600');
 
             // Explicit CORS headers for video/media streaming
@@ -330,6 +338,7 @@ const getObjectContent = async (req, res) => {
             res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
             res.setHeader('Content-Type', contentType);
             res.setHeader('Content-Length', fileSize);
+            res.setHeader('Content-Disposition', disposition);
             res.setHeader('Accept-Ranges', 'bytes');
             res.setHeader('Cache-Control', 'public, max-age=3600');
 

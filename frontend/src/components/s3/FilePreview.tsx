@@ -87,13 +87,12 @@ export const FilePreview = ({ object, bucket, onClose }: FilePreviewProps) => {
 
   const handleDownload = async () => {
     try {
-      const downloadUrl = s3Api.getObjectContentUrl(bucket, object.key);
+      const downloadUrl = `${s3Api.getObjectContentUrl(bucket, object.key)}?download=1`;
 
       // Create a temporary anchor element to trigger download
       const link = document.createElement('a');
       link.href = downloadUrl;
       link.download = object.name;
-      link.target = '_blank';
 
       // Trigger download
       document.body.appendChild(link);
