@@ -322,8 +322,11 @@ const getObjectContent = async (req, res) => {
             res.setHeader('Access-Control-Allow-Credentials', 'true');
             res.setHeader('Access-Control-Expose-Headers', 'Content-Range, Accept-Ranges, Content-Length, Content-Type, Content-Disposition');
 
-            // Stream the partial response
-            response.Body.pipe(res);
+            // Stream the partial response; tear down upstream socket if client disconnects
+            const upstream = response.Body;
+            req.on('close', () => upstream.destroy());
+            upstream.on('error', () => res.destroy());
+            upstream.pipe(res);
         } else {
             // No range request, send full file
             const command = new GetObjectCommand({
@@ -347,8 +350,11 @@ const getObjectContent = async (req, res) => {
             res.setHeader('Access-Control-Allow-Credentials', 'true');
             res.setHeader('Access-Control-Expose-Headers', 'Content-Range, Accept-Ranges, Content-Length, Content-Type, Content-Disposition');
 
-            // Stream the response body
-            response.Body.pipe(res);
+            // Stream the response body; tear down upstream socket if client disconnects
+            const upstream = response.Body;
+            req.on('close', () => upstream.destroy());
+            upstream.on('error', () => res.destroy());
+            upstream.pipe(res);
         }
     } catch (error) {
         if (error.name === 'NotFound' || error.$metadata?.httpStatusCode === 404) {
